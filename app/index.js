@@ -1,9 +1,9 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
-import Root from './root'
+import Root from './root' 
 
-//console.log(react.version);
+//console.log(react.version);dabao
 render(
 	<AppContainer>
 		<Root />
