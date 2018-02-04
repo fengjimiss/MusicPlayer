@@ -1,0 +1,42 @@
+cxy@cxy-pc MINGW64 /f/html/react-music-player (master)   一、添加//git中添加，-A表示全部文件 。可选择执行四、看推送状态
+$ git add -A                                              
+
+cxy@cxy-pc MINGW64 /f/html/react-music-player (master)    二、提交//git提交，-m表示描述信息
+$ git commit -m 'add unuseless'
+[master f2991e2] add unuseless
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+cxy@cxy-pc MINGW64 /f/html/react-music-player (master)   三、推送到远程版本库//git push
+$ git push origin master                                             
+Counting objects: 4, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 403 bytes | 201.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:fengjimiss/react-music-player
+   c241ac9..f2991e2  master -> master
+
+cxy@cxy-pc MINGW64 /f/html/react-music-player (master)   四、看推送状态//git status
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+
+cxy@cxy-pc MINGW64 /f/html/react-music-player (master)    查看commit信息，相当于每次提交的版本
+$ git log
+commit f2991e2f8a1cc9c4133b814b4f712d0d0b29722c (HEAD -> master, origin/master)   the lattest
+Author: fengji <937966511@qq.com>
+Date:   Sun Feb 4 11:13:08 2018 +0800
+
+    add unuseless
+
+commit c241ac961ff27ccc7dd6d71f448ca712ca33a7cf                                    the first
+Author: fengji <937966511@qq.com>
+Date:   Sun Feb 4 11:00:24 2018 +0800
+
+    3-5progressBar
+
+cxy@cxy-pc MINGW64 /f/html/react-music-player ((c241ac9...))  切换到想到的版本
+$ git reset  c241ac961ff27ccc7dd6d71f448ca712ca33a7cf
