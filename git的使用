@@ -40,3 +40,6 @@ Date:   Sun Feb 4 11:00:24 2018 +0800
 
 cxy@cxy-pc MINGW64 /f/html/react-music-player ((c241ac9...))  切换到想到的版本
 $ git reset  c241ac961ff27ccc7dd6d71f448ca712ca33a7cf
+
+
+git pull origin master  # 就是从远程库把修改拉下来
