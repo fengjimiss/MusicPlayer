@@ -1,6 +1,11 @@
 import React from 'react'
 import './progress.less'
 class Progress extends React.Component{ //es6语法，每个单独成分不用加逗号
+	getDefaultProps(){
+		return{
+			barColor:'#2f9842'
+		}
+	}
 	constructor(props) {
 
 		super(props);
@@ -10,15 +15,16 @@ class Progress extends React.Component{ //es6语法，每个单独成分不用�
 	}
 
 	changeProgress(e){
+		console.log('aaaa');
 		let progressBar=this.refs.progressBar;
 		let progress=(e.clientX-progressBar.getBoundingClientRect().left)/progressBar.clientWidth;
-		console.log(progress);
+		this.props.onProgressChange && this.props.onProgressChange(progress); //前半句为不必要的
 	}
 
 	render(){
 		return(
 			<div className="components-progress"   ref="progressBar" onClick={this.changeProgress}>
-				<div className="progress" style={{width:`${this.props.progress}%` }}></div>
+				<div className="progress" style={{width:`${this.props.progress}%` ,background:this.props.barColor}}></div>
 			</div>
 		);
 	}
