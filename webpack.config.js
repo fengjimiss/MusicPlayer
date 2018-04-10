@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-
+ 
 module.exports = {
     entry: [
         'webpack-dev-server/client?http://localhost:3000',
