@@ -1,49 +1,104 @@
 import React from 'react';
 import Header from './components/header'
-import Progress from './components/progress'
-let duration=null;
-class Root extends React.Component{   /*es5语法，每个单独成分要加逗号*/
+import Player from './page/player' 
+import MusicList from './page/musiclist' 
+import { MUSIC_LIST } from './config/musiclist'
+import { Router, IndexRoute, Link, Route,hashHistory } from 'react-router'
+//import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
+import Pubsub from 'pubsub-js'
+
+class App extends React.Component{             /*es5语法，每个单独成分要加逗号*/
 	constructor(props){
 		super(props);
 		this.state={
-			progress:'-'
+			musicList:MUSIC_LIST,
+			currentMusicItem: MUSIC_LIST[0]
 		};
+		
+		//return{} 在构造器中不能使用return
 	}
-
+	playMusic(musicItem) {
+		$('#player').jPlayer('setMedia', {
+			mp3:musicItem.file
+		}).jPlayer('play');
+		this.setState({
+			currentMusicItem:musicItem
+		});
+	}
+	playNext(type = "next"){
+		let index = this.findMusicIndex(this.state.currentMusicItem);
+		let newIndex = null;
+		let musicListLength = this.state.musicList.length
+		if (type === 'next') {
+			newIndex = (index + 1) % musicListLength;//为防止当前播放为最后一首再进行播放下一曲操作的时候数组溢出
+		} else {
+			newIndex = (index - 1 + musicListLength) % musicListLength;//播放下一曲
+		}
+		this.playMusic(this.state.musicList[newIndex]);
+	}
+	findMusicIndex(musicItem) {//找到当前音乐在音乐列表的位置,这index会在很多其他地方也会用到，所以把它单独拎出来
+		return this.state.musicList.indexOf(musicItem);
+	}
 	componentDidMount(){
 		$('#player').jPlayer({
-			ready:function(){
-				$(this).jPlayer('setMedia',{
-					mp3:'http://oj4t8z2d5.bkt.clouddn.com/%E9%AD%94%E9%AC%BC%E4%B8%AD%E7%9A%84%E5%A4%A9%E4%BD%BF.mp3'
-				}).jPlayer('play');
-			},
 			supplied:'mp3',
 			wmode:'window'
 		});
-		
-		$('#player').bind($.jPlayer.event.timeupdate,(e)=>{
-			duration=e.jPlayer.status.duration;
+		this.playMusic(this.state.currentMusicItem);
+		$('#player').bind($.jPlayer.event.ended, (e) => {
+			this.playNext();
+		});
+		Pubsub.subscribe('DELETE_MUSIC', (msg, musicItem)=>{
 			this.setState({
-				progress:e.jPlayer.status.currentPercentAbsolute
+				musicList:this.state.musicList.filter(item => {
+					return item !== musicItem;
+				})
 			});
+		});
+		Pubsub.subscribe('PLAY_MUSIC', (msg, musicItem)=>{
+			this.playMusic(musicItem);
+		});
+		Pubsub.subscribe('PLAY_PREV', (msg, musicItem)=>{
+			this.playNext('prev');
+		});
+		Pubsub.subscribe('PLAY_NEXT', (msg, musicItem)=>{
+			this.playNext();
 		});
 	}
 	componentWillUnMount(){
-		$('#player').unbind($.jPlayer.event.timeupdate);
+		Pubsub.unsubscribe('PLAY_MUSIC');
+		Pubsub.unsubscribe('DELETE_MUSIC');
+		Pubsub.unsubscribe('PLAY_PREV');
+		Pubsub.unsubscribe('PLAY_NEXT');
+		$('#Player').unbind($.jPlayer.event.ended);
 	}
-	progressChangeHandler(progress){
-		$('#player').jPlayer('play',duration*progress);
+	
+	render(){
+		return (
+			<div>
+				<Header />				
+				{React.cloneElement(this.props.children, this.state)}
+				
+			</div>
+		);
 	}
+}
+class Root extends React.Component{   
 	render(){
 		return(
-			<div>
-				<Header />
-				<Progress progress={this.state.progress}
-					onProgressChange={this.progressChangeHandler}
-					barColor="#ff0000"></Progress>
-			</div>
+		<Router history={hashHistory}>
+			<Route path="/" component={App}>
+				<IndexRoute component={Player}></IndexRoute>   
+				<Route path="/myMusic" component={MusicList}></Route>
+			</Route>
+		</Router>
+		
 		);
 	}
 }
 export default Root;
 //将app中所以的组件都包裹于root中
+/*<MusicList
+		currentMusicItem={this.state.currentMusicItem}
+		musicList={this.state.musicList}
+></MusicList>*/				

@@ -5,7 +5,7 @@ class Header extends React.Component{
 		return(
 			<div className="components-header row">
 				<img src="./static/images/logo.png" width="40" alt="" className="-col-auto" />
-				<h1 className="caption">React Music Player </h1>
+				<h1 className="caption">小云の音乐空间</h1>
 			</div>
 		);
 	}
